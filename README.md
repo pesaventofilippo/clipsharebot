@@ -1,5 +1,5 @@
 # pasteandsharebot
-Find it on (Telegram)[https://t.me/pasteandsharebot]!
+Find it on [Telegram](https://t.me/pasteandsharebot)!
 
 # What can this bot do?
 This bot helps you saving and finding a text you have to share.
