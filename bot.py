@@ -167,7 +167,7 @@ def on_message(msg):
             # Get the user status
             try:
                 userStatus = str(user_db.search(where('chatId') == chatId)[0]['status'])
-            except KeyError:
+            except IndexError:
                 userStatus = "normal"
 
             if text == "/cancel":
