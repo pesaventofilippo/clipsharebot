@@ -55,11 +55,11 @@ def getString(string, *args):
                  "- Via inline chat, for example in a group, with <i>@pasteandsharebot 'ClipCode'</i>\n\n" \
                  "Other commands:\n" \
                  "/start - Start the bot\n" \
-                 "/help - Show this message" \
+                 "/help - Show this message\n" \
                  "/clip 'ClipCode'- Search Clips (read infos up)\n" \
                  "/list - Show a list of all your saved clips\n" \
                  "/delete 'ClipCode' - Delete a clip\n" \
-                 "/edit 'ClipCode' - Edit a clip"
+                 "/edit 'ClipCode' - Edit a clip\n"
 
     elif string == "not_text_message":
         result = "Sorry, I can only store text messages at the moment.\n" \
