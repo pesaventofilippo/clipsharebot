@@ -6,13 +6,13 @@ from time import sleep
 # Load the bot
 try:
     # Try to read the token
-    token_file = open('bot_token', 'r')
+    token_file = open('bot_token.txt', 'r')
     bot_token = token_file.readline().strip()
     bot = telepot.Bot(bot_token)
     token_file.close()
 except FileNotFoundError:
     # Ask the user for the token
-    token_file = open('bot_token', 'w')
+    token_file = open('bot_token.txt', 'w')
     bot_token = input("Please insert the bot token: ")
     bot = telepot.Bot(bot_token)
     token_file.write(bot_token)
@@ -167,7 +167,7 @@ def on_message(msg):
             # Get the user status
             try:
                 userStatus = str(user_db.search(where('chatId') == chatId)[0]['status'])
-            except KeyError:
+            except IndexError:
                 userStatus = "normal"
 
             if text == "/cancel":
@@ -285,5 +285,6 @@ def on_inline_query(msg):
 
 # Keep alive the bot
 bot.message_loop({'chat': on_message, 'inline_query': on_inline_query})
+print("Bot started...")
 while 1:
     sleep(60)
