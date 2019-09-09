@@ -70,6 +70,9 @@ def reply(msg):
                 bot.editMessageReplyMarkup((chatId, sent['message_id']), keyboards.delete(user, sent['message_id']))
             else:
                 bot.sendMessage(chatId, "😓 Sorry, you don't have clips yet! Type /new to get started.")
+        
+        else:
+            bot.sendMessage(chatId, "🤨 <i>Command not found.</i>", parse_mode="HTML")
 
 
 @db_session
