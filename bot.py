@@ -37,13 +37,13 @@ def reply(msg):
         clip = Clip.get(user=user, id=clipid)
         clip.title = text
         user.status = "normal"
-        bot.sendMessage(chatId, "✅ Clip {} renamed!\n"
-                                "Ready to share it? Use me in a chat by typing @clipsharebot!")
+        bot.sendMessage(chatId, "📝 Clip <b>{}</b> renamed!\n"
+                                "Ready to share it? Use me in a chat by typing @clipsharebot!".format(text), parse_mode="HTML")
     
     elif user.status == "normal":
         if text == "/start":
             bot.sendMessage(chatId, "Hey, <b>{}</b>! 👋🏻\n"
-                                    "Type /newclip to create a new custom clip.".format(name), parse_mode="HTML")
+                                    "Type /new to create a new custom clip.".format(name), parse_mode="HTML")
         
         elif text == "/cancel":
             bot.sendMessage(chatId, "Operation cancelled!\n"
@@ -55,15 +55,21 @@ def reply(msg):
         
         elif text == "/list":
             clips = user.clips
-            message = "📚 <b>Clips list:</b>\n<i>Click on a title to see the full content</i>\n"
-            for clip in clips:
-                message += "\n📄 <a href=\"https://t.me/clipsharebot?start=getclip#{}\">{}</a>".format(clip.id, clip.title)
+            if clips:
+                message = "📚 <b>Clips list:</b>\n<i>Click on a title to see the full content</i>\n"
+                for clip in clips:
+                    message += "\n📄 <a href=\"https://t.me/clipsharebot?start=getclip#{}\">{}</a>".format(clip.id, clip.title)
+            else:
+                message = "😓 Sorry, you don't have clips yet! Type /new to get started."
             bot.sendMessage(chatId, message, parse_mode="HTML")
 
         elif text == "/delete":
-            sent = bot.sendMessage(chatId, "🗑 <b>Delete a Clip</b>\n"
-                                           "What clip would you like to delete? Type /list if you want to see a clip's full content.", parse_mode="HTML")
-            bot.editMessageReplyMarkup((chatId, sent['message_id']), keyboards.delete(user, sent['message_id']))
+            if user.clips:
+                sent = bot.sendMessage(chatId, "🗑 <b>Delete a Clip</b>\n"
+                                            "What clip would you like to delete? Type /list if you want to see a clip's full content.", parse_mode="HTML")
+                bot.editMessageReplyMarkup((chatId, sent['message_id']), keyboards.delete(user, sent['message_id']))
+            else:
+                bot.sendMessage(chatId, "😓 Sorry, you don't have clips yet! Type /new to get started.")
 
 
 @db_session
