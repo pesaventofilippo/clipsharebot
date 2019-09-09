@@ -66,7 +66,7 @@ def reply(msg):
         elif text == "/delete":
             if user.clips:
                 sent = bot.sendMessage(chatId, "🗑 <b>Delete a Clip</b>\n"
-                                            "What clip would you like to delete? Type /list if you want to see a clip's full content.", parse_mode="HTML")
+                                               "What clip would you like to delete? Type /list if you want to see a clip's full content.", parse_mode="HTML")
                 bot.editMessageReplyMarkup((chatId, sent['message_id']), keyboards.delete(user, sent['message_id']))
             else:
                 bot.sendMessage(chatId, "😓 Sorry, you don't have clips yet! Type /new to get started.")
@@ -75,9 +75,10 @@ def reply(msg):
             clipid = int(text.split("_")[1])
             clip = Clip.get(user=user, id=clipid)
             if clip:
-                bot.sendMessage(chatId, "📖 <b>Open Clip</b>\n\n<b>Title:</b> {}\n<b>Text:</b> {}".format(clip.title, clip.text))
+                bot.sendMessage(chatId, "📖 <b>Open Clip</b>\n\n<b>Title:</b> {}\n<b>Text:</b> {}".format(clip.title, clip.text), parse_mode="HTML")
             else:
-                bot.sendMessage(chatId, "Don't try reading other people's clips 👀")
+                bot.sendMessage(chatId, "🔒 Error: this clip has been deleted.\n"
+                                        "It is also possible that you manually modified a link to see other people's clips: I'm smarter than this 👀")
         
         else:
             bot.sendMessage(chatId, "🤨 <i>Command not found.</i>", parse_mode="HTML")
@@ -96,7 +97,7 @@ def button(msg):
         clip = Clip.get(user=user, id=clipid)
         cliptext = " ".join(clip.text.split()[:10])
         cliptext = cliptext if len(clip.text.split()[:10]) < 10 else cliptext + "..."
-        bot.editMessageText((chatId, message_id), "⚠️ Are you <b>totally sure</b> you want to delete this clip?\n"
+        bot.editMessageText((chatId, message_id), "⚠️ Are you <b>totally sure</b> you want to delete this clip?\n\n"
                                                   "<b>Title:</b> {}\n"
                                                   "<b>Text:</b> {}".format(clip.title, cliptext), parse_mode="HTML", reply_markup=keyboards.delete_confirm(clipid, message_id))
     
