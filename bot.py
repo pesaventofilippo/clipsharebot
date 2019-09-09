@@ -58,7 +58,7 @@ def reply(msg):
             if clips:
                 message = "📚 <b>Clips List</b>\n<i>Click on a title to see the full content</i>\n"
                 for clip in clips:
-                    message += "\n📄 <a href=\"https://t.me/clipsharebot?start=getclip#{}\">{}</a>".format(clip.id, clip.title)
+                    message += "\n📄 <a href=\"https://t.me/clipsharebot?start=getclip_{}\">{}</a>".format(clip.id, clip.title)
             else:
                 message = "😓 Sorry, you don't have clips yet! Type /new to get started."
             bot.sendMessage(chatId, message, parse_mode="HTML", disable_web_page_preview=True)
@@ -72,9 +72,12 @@ def reply(msg):
                 bot.sendMessage(chatId, "😓 Sorry, you don't have clips yet! Type /new to get started.")
         
         elif text.startswith("/start getclip"):
-            clipid = int(text.split("#")[1])
+            clipid = int(text.split("_")[1])
             clip = Clip.get(user=user, id=clipid)
-            bot.sendMessage(chatId, "📖 <b>Open Clip</b>\n\n<b>Title:</b> {}\n<b>Text:</b> {}".format(clip.title, clip.text))
+            if clip:
+                bot.sendMessage(chatId, "📖 <b>Open Clip</b>\n\n<b>Title:</b> {}\n<b>Text:</b> {}".format(clip.title, clip.text))
+            else:
+                bot.sendMessage(chatId, "Don't try reading other people's clips 👀")
         
         else:
             bot.sendMessage(chatId, "🤨 <i>Command not found.</i>", parse_mode="HTML")
@@ -95,7 +98,7 @@ def button(msg):
         cliptext = cliptext if len(clip.text.split()[:10]) < 10 else cliptext + "..."
         bot.editMessageText((chatId, message_id), "⚠️ Are you <b>totally sure</b> you want to delete this clip?\n"
                                                   "<b>Title:</b> {}\n"
-                                                  "<b>Text:</b> {}...".format(clip.title, cliptext), parse_mode="HTML", reply_markup=keyboards.delete_confirm(clipid, message_id))
+                                                  "<b>Text:</b> {}".format(clip.title, cliptext), parse_mode="HTML", reply_markup=keyboards.delete_confirm(clipid, message_id))
     
     elif query.startswith("deleteyes"):
         clipid = int(query.split("_")[1])
