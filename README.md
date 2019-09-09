@@ -1,7 +1,5 @@
-# pasteandsharebot
-Find it on [Telegram](https://t.me/pasteandsharebot)!
+# clipsharebot
+Find it on [Telegram](https://t.me/clipsharebot)!
 
 # What can this bot do?
-This bot helps you saving and finding a text you have to share.
-Think at it as a sort of an extended clipboard: you paste text there, and you can later find that text by typing @pasteandsharebot in a group, in a private chat or whatever you want.
-Could it be simpler than that?
+A Telegram Bot to quickly paste and share text snippets. A sort of a glorified Ctrl+C and Ctrl+V, but on the cloud and with encryption.

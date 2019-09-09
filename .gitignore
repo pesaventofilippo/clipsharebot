@@ -1,3 +1,14 @@
-clips_database.json
-users_database.json
-bot_token.txt
+# Settings Files
+token.txt
+
+# Database
+clipsharebot.db
+
+# Python Compiled Cache
+*__pycache__/
+
+# Python Virtual Environment
+venv/
+
+# MacOS Finder Junk
+*.DS_Store
