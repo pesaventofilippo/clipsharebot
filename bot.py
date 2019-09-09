@@ -72,7 +72,7 @@ def reply(msg):
                 bot.sendMessage(chatId, "😓 Sorry, you don't have clips yet! Type /new to get started.")
         
         elif text.startswith("/start getclip"):
-            clipid = text.split("#")[1]
+            clipid = int(text.split("#")[1])
             clip = Clip.get(user=user, id=clipid)
             bot.sendMessage(chatId, "📖 <b>Open Clip</b>\n\n<b>Title:</b> {}\n<b>Text:</b> {}".format(clip.title, clip.text))
         
