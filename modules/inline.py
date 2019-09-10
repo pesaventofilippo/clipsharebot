@@ -12,13 +12,11 @@ def inlineResults(user, query):
         selectPool = select(c for c in Clip if c.user == user)[:25]
     results = []
     for clip in selectPool:
-        cliptext = " ".join(clip.text.split()[:10])
-        cliptext = cliptext if len(clip.text.split()[:10]) < 11 else cliptext + "..."
         results.append(
             InlineQueryResultArticle(
                 id=str(clip.id),
                 title=clip.title,
                 input_message_content=InputTextMessageContent(
-                    message_text=cliptext
+                    message_text=clip.text
                 )))
     return results
