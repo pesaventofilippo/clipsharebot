@@ -95,7 +95,7 @@ def button(msg):
         clipid = int(query.split("_")[1])
         clip = Clip.get(user=user, id=clipid)
         cliptext = " ".join(clip.text.split()[:10])
-        cliptext = cliptext if len(clip.text.split()[:10]) < 11 else cliptext + "..."
+        cliptext = cliptext if len(clip.text.split()) < 11 else cliptext + "..."
         bot.editMessageText((chatId, message_id), "⚠️ Are you <b>totally sure</b> you want to delete this clip?\n\n"
                                                   "<b>Title:</b> {}\n"
                                                   "<b>Text:</b> {}".format(clip.title, cliptext), parse_mode="HTML", reply_markup=keyboards.delete_confirm(clipid, message_id))
