@@ -23,7 +23,7 @@ def reply(msg):
     if user.status == "newclip":
         if text == "/cancel":
             user.status = "normal"
-            bot.sendMessage(chatId, "❌ /newclip cancelled!")
+            bot.sendMessage(chatId, "❎ Operation cancelled!")
         
         else:
             clip = Clip(user=user, text=helpers.sanitize(text))
@@ -75,8 +75,7 @@ def reply(msg):
             clipid = int(text.split("_")[1])
             clip = Clip.get(user=user, id=clipid)
             if clip:
-                bot.sendMessage(chatId, "📖 <b>Open Clip</b>\n\n<b>Title:</b> {}\n<b>Text:</b> {}".format(
-                                        helpers.sanitize(clip.title), helpers.sanitize(clip.text)), parse_mode="HTML")
+                bot.sendMessage(chatId, "📖 <b>Open Clip</b>\n\n<b>Title:</b> {}\n<b>Text:</b> {}".format(clip.title, clip.text), parse_mode="HTML")
             else:
                 bot.sendMessage(chatId, "🔒 <i>Error: this clip has been deleted.</i>", parse_mode="HTML")
         
@@ -99,7 +98,8 @@ def button(msg):
         cliptext = cliptext if len(clip.text.split()) < 11 else cliptext + "..."
         bot.editMessageText((chatId, message_id), "⚠️ Are you <b>totally sure</b> you want to delete this clip?\n\n"
                                                   "<b>Title:</b> {}\n"
-                                                  "<b>Text:</b> {}".format(clip.title, cliptext), parse_mode="HTML", reply_markup=keyboards.delete_confirm(clipid, message_id))
+                                                  "<b>Text:</b> {}".format(clip.title, cliptext), parse_mode="HTML",
+                                                  reply_markup=keyboards.delete_confirm(clipid, message_id))
     
     elif query.startswith("deleteyes"):
         clipid = int(query.split("_")[1])
