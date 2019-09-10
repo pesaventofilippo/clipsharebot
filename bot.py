@@ -3,7 +3,7 @@ from telepot import Bot, glance
 from threading import Thread
 from pony.orm import db_session, commit
 from modules.database import User, Clip
-from modules import keyboards
+from modules import keyboards, inline
 
 with open('token.txt', 'r') as f:
     token = f.readline().strip()
@@ -49,7 +49,7 @@ def reply(msg):
             bot.sendMessage(chatId, "Operation cancelled!\n"
                                     "I was doing nothing, btw... 😴")
         
-        elif text == "/new":
+        elif text == "/new" or ("newclip_inline" in text):
             user.status = "newclip"
             bot.sendMessage(chatId, "✏️ Ok, send me the text for the new clip!\nType /cancel to abort.")
         
@@ -77,8 +77,7 @@ def reply(msg):
             if clip:
                 bot.sendMessage(chatId, "📖 <b>Open Clip</b>\n\n<b>Title:</b> {}\n<b>Text:</b> {}".format(clip.title, clip.text), parse_mode="HTML")
             else:
-                bot.sendMessage(chatId, "🔒 Error: this clip has been deleted.\n"
-                                        "It is also possible that you manually modified a link to see other people's clips: I'm smarter than this 👀")
+                bot.sendMessage(chatId, "🔒 <i>Error: this clip has been deleted.</i>", parse_mode="HTML")
         
         else:
             bot.sendMessage(chatId, "🤨 <i>Command not found.</i>", parse_mode="HTML")
@@ -96,7 +95,7 @@ def button(msg):
         clipid = int(query.split("_")[1])
         clip = Clip.get(user=user, id=clipid)
         cliptext = " ".join(clip.text.split()[:10])
-        cliptext = cliptext if len(clip.text.split()[:10]) < 10 else cliptext + "..."
+        cliptext = cliptext if len(clip.text.split()[:10]) < 11 else cliptext + "..."
         bot.editMessageText((chatId, message_id), "⚠️ Are you <b>totally sure</b> you want to delete this clip?\n\n"
                                                   "<b>Title:</b> {}\n"
                                                   "<b>Text:</b> {}".format(clip.title, cliptext), parse_mode="HTML", reply_markup=keyboards.delete_confirm(clipid, message_id))
@@ -111,12 +110,24 @@ def button(msg):
         bot.editMessageText((chatId, message_id), "👍 Clip restored!", parse_mode="HTML", reply_markup=None)
 
 
+@db_session
+def inline(msg):
+    queryId, chatId, queryString = glance(msg, flavor='inline_query')
+    user = User.get(chatId=chatId)
+    results = inline.inlineResults(user, queryString)
+    bot.answerInlineQuery(queryId, results, cache_time=10, is_personal=True,
+                            switch_pm_text="Create a new Clip", switch_pm_parameter="newclip_inline")
+
+
 def incoming_message(msg):
     Thread(target=reply, args=[msg]).start()
 
 def incoming_button(msg):
     Thread(target=button, args=[msg]).start()
 
-bot.message_loop({'chat': incoming_message, 'callback_query': incoming_button})
+def incoming_query(msg):
+    Thread(target=inline, args=[msg]).start()
+
+bot.message_loop({'chat': incoming_message, 'callback_query': incoming_button, 'inline_query': incoming_query})
 while True:
     sleep(60)
