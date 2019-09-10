@@ -111,7 +111,7 @@ def button(msg):
 
 
 @db_session
-def inline(msg):
+def query(msg):
     queryId, chatId, queryString = glance(msg, flavor='inline_query')
     user = User.get(chatId=chatId)
     results = inline.inlineResults(user, queryString)
@@ -126,7 +126,7 @@ def incoming_button(msg):
     Thread(target=button, args=[msg]).start()
 
 def incoming_query(msg):
-    Thread(target=inline, args=[msg]).start()
+    Thread(target=query, args=[msg]).start()
 
 bot.message_loop({'chat': incoming_message, 'callback_query': incoming_button, 'inline_query': incoming_query})
 while True:
