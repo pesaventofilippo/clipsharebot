@@ -3,7 +3,7 @@ from telepot import Bot, glance
 from threading import Thread
 from pony.orm import db_session, commit
 from modules.database import User, Clip
-from modules import keyboards, inline
+from modules import keyboards, inline, helpers
 
 with open('token.txt', 'r') as f:
     token = f.readline().strip()
@@ -26,7 +26,7 @@ def reply(msg):
             bot.sendMessage(chatId, "❌ /newclip cancelled!")
         
         else:
-            clip = Clip(user=user, text=text)
+            clip = Clip(user=user, text=helpers.sanitize(text))
             commit()
             user.status = "cliptitle#{}".format(clip.id)
             bot.sendMessage(chatId, "✅ Clip successfully created!\n"
@@ -35,7 +35,7 @@ def reply(msg):
     elif user.status.startswith("cliptitle"):
         clipid = int(user.status.split("#")[1])
         clip = Clip.get(user=user, id=clipid)
-        clip.title = text
+        clip.title = helpers.sanitize(text)
         user.status = "normal"
         bot.sendMessage(chatId, "📝 Clip <b>{}</b> renamed!\n"
                                 "Ready to share it? Use me in a chat by typing @clipsharebot!".format(text), parse_mode="HTML")
@@ -75,7 +75,8 @@ def reply(msg):
             clipid = int(text.split("_")[1])
             clip = Clip.get(user=user, id=clipid)
             if clip:
-                bot.sendMessage(chatId, "📖 <b>Open Clip</b>\n\n<b>Title:</b> {}\n<b>Text:</b> {}".format(clip.title, clip.text), parse_mode="HTML")
+                bot.sendMessage(chatId, "📖 <b>Open Clip</b>\n\n<b>Title:</b> {}\n<b>Text:</b> {}".format(
+                                        helpers.sanitize(clip.title), helpers.sanitize(clip.text)), parse_mode="HTML")
             else:
                 bot.sendMessage(chatId, "🔒 <i>Error: this clip has been deleted.</i>", parse_mode="HTML")
         

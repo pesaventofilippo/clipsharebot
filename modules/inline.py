@@ -19,10 +19,8 @@ def inlineResults(user, query):
                 id=str(clip.id),
                 title=clip.title,
                 input_message_content=InputTextMessageContent(
-                    message_text=clip.text, parse_mode="HTML", disable_web_page_preview=True
-                ),
+                    message_text=clip.text, parse_mode="HTML", disable_web_page_preview=True),
                 description=desc,
-                thumb_url="https://pesaventofilippo.com/assets/images/projects/clipsharebot.png",
-                
+                thumb_url="https://pesaventofilippo.com/assets/images/projects/clipsharebot.png"
             ))
     return results
