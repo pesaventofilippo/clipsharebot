@@ -1,14 +1,20 @@
 from time import sleep
+from os import environ
 from telepot import Bot, glance
 from threading import Thread
 from pony.orm import db_session, commit
 from modules.database import User, Clip
 from modules import keyboards, inline, helpers
 
-with open('token.txt', 'r') as f:
-    token = f.readline().strip()
-    bot = Bot(token)
+try:
+    with open('token.txt', 'r') as f:
+        token = f.readline().strip()
+except FileNotFoundError:
+    token = environ.get("CLIPSHARE_BOT_TOKEN")
 
+if token == "":
+    raise ValueError("The Bot token is empty! Use the token.txt file or "
+                     "the `CLIPSHARE_BOT_TOKEN` environment variable.")
 
 @db_session
 def reply(msg):
