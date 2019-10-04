@@ -16,6 +16,9 @@ if token == "":
     raise ValueError("The Bot token is empty! Use the token.txt file or "
                      "the `CLIPSHARE_BOT_TOKEN` environment variable.")
 
+bot = Bot(token)
+
+
 @db_session
 def reply(msg):
     chatId = msg['chat']['id']
