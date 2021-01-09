@@ -1,4 +1,4 @@
-from telepot.namedtuple import InlineQueryResultArticle, InputTextMessageContent
+from telepotpro.namedtuple import InlineQueryResultArticle, InputTextMessageContent
 from pony.orm import db_session
 
 
